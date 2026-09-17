@@ -49,6 +49,8 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
   final _frameGrabber = CanvasFrameGrabber();
   final _solutionCache = BoardSolutionCache(capacity: 10);
   final _streamIdController = TextEditingController(text: '');
+  final _passwordController = TextEditingController(text: '');
+  bool _obscurePassword = true;
 
   // Vision & Solver State
   VisionExtractionResult? _lastVisionResult;
@@ -89,8 +91,10 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
 
   void _handleConnect() {
     final streamId = _streamIdController.text.trim();
+    final passwordText = _passwordController.text.trim();
+    final password = passwordText.isNotEmpty ? passwordText : null;
     if (streamId.isNotEmpty) {
-      _vdoService.viewStream(streamId);
+      _vdoService.viewStream(streamId, password: password);
     }
   }
 
@@ -204,6 +208,7 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
     _videoController.dispose();
     _frameGrabber.dispose();
     _streamIdController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -350,6 +355,7 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
                             borderSide: BorderSide.none,
                           ),
                         ),
+                        onSubmitted: (_) => _handleConnect(),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -370,6 +376,38 @@ class _LiveStreamScreenState extends State<LiveStreamScreen> {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: _obscurePassword,
+                  style: const TextStyle(fontSize: 13),
+                  decoration: InputDecoration(
+                    hintText: 'Password (optional)',
+                    filled: true,
+                    isDense: true,
+                    fillColor: const Color(0xFF1E293B),
+                    prefixIcon: const Icon(Icons.lock_outline, size: 16, color: Colors.white54),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                        size: 16,
+                        color: Colors.white54,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                      splashRadius: 16,
+                      tooltip: _obscurePassword ? 'Show password' : 'Hide password',
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  onSubmitted: (_) => _handleConnect(),
                 ),
                 const SizedBox(height: 16),
 
