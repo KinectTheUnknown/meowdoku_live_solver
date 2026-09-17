@@ -11,7 +11,9 @@ class VideoPlayerController extends ChangeNotifier {
   bool _isRegistered = false;
 
   VideoPlayerController({String? viewType})
-      : viewType = viewType ?? 'vdo-ninja-player-${DateTime.now().microsecondsSinceEpoch}';
+      : viewType = viewType ?? 'vdo-ninja-player-${DateTime.now().microsecondsSinceEpoch}' {
+    _ensureInitialized();
+  }
 
   web.HTMLVideoElement? get videoElement => _videoElement;
   bool get hasStream => _stream != null;
