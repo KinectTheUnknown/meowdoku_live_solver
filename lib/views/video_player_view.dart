@@ -17,6 +17,7 @@ class VideoPlayerController extends ChangeNotifier {
 
   web.HTMLVideoElement? get videoElement => _videoElement;
   bool get hasStream => _stream != null;
+  bool get isRegistered => _isRegistered;
   int get videoWidth => _videoElement?.videoWidth ?? 0;
   int get videoHeight => _videoElement?.videoHeight ?? 0;
 
@@ -94,6 +95,10 @@ class VideoPlayerView extends StatelessWidget {
           ),
         ),
       );
+    }
+
+    if (!controller.isRegistered) {
+      return const SizedBox.shrink();
     }
 
     return HtmlElementView(
