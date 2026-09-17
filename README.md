@@ -27,3 +27,9 @@ For the complete architectural design, pipeline diagrams, and phased roadmap, se
 - **Streaming**: `vdoninja_sdk` (VDO.Ninja WebRTC SDK)
 - **Web Interop**: `package:web`, `dart:ui_web`
 - **Vision & Solver**: Pure Dart (`image`, bitmask CSP backtracking)
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
