@@ -2,6 +2,8 @@
 
 An intelligent real-time solver for **Meowdoku** and Queens-style logic puzzles, built with **Flutter Web** and powered by **VDO.Ninja** screensharing.
 
+🌐 **Live Web Demo**: [https://kinecttheunknown.github.io/meowdoku_live_solver/](https://kinecttheunknown.github.io/meowdoku_live_solver/)
+
 ---
 
 ## Highlights
