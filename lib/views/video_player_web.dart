@@ -38,8 +38,14 @@ class WebVideoManagerImpl {
   void attachStream(web.MediaStream stream) {
     final video = _videoElement;
     if (video != null) {
-      video.srcObject = stream;
-      video.play();
+      if (video.srcObject != stream) {
+        video.srcObject = stream;
+      }
+      video.play().toDart.catchError((Object err) {
+        web.console.warn('[Meowdoku] video.play() was interrupted or rejected:'.toJS);
+        web.console.warn(err.toString().toJS);
+        return null;
+      });
     }
   }
 

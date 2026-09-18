@@ -8,8 +8,6 @@ class CanvasFrameGrabberImpl {
 
   CapturedFrame? captureFrame(dynamic videoElement) {
     if (videoElement == null) return null;
-    final jsObj = videoElement as JSAny;
-    if (!jsObj.isA<web.HTMLVideoElement>()) return null;
     final video = videoElement as web.HTMLVideoElement;
 
     final width = video.videoWidth;

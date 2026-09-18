@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:js_interop';
 import 'package:flutter/foundation.dart';
 import 'package:vdoninja_sdk/vdoninja_sdk.dart';
 import 'package:web/web.dart' as web;
@@ -69,11 +70,50 @@ class VdoNinjaWebAdapter implements VdoNinjaPlatformAdapter {
       onError(event.message);
     });
 
+    web.MediaStream? activeMediaStream;
+
     _trackSub = sdk.onTrack.listen((event) {
+      web.console.log('[Meowdoku] onTrack event received:'.toJS);
+
+      // Check if this event carries a video track
+      final track = event.track;
+      web.MediaStreamTrack? videoTrack;
+      if (track != null) {
+        final msTrack = track as web.MediaStreamTrack;
+        if (msTrack.kind == 'video') {
+          videoTrack = msTrack;
+        }
+      }
+
+      // If the SDK provided streams, search for one containing video
       if (event.streams.isNotEmpty) {
-        final stream = event.streams.first;
-        if (stream.isA<web.MediaStream>()) {
+        for (final rawStream in event.streams) {
+          if (rawStream != null) {
+            try {
+              final stream = rawStream as web.MediaStream;
+              final tracks = stream.getVideoTracks().toDart;
+              if (tracks.isNotEmpty) {
+                activeMediaStream = stream;
+                onStreamAvailable(stream);
+                return;
+              }
+            } catch (e) {
+              web.console.warn('[Meowdoku] Error checking stream video tracks:'.toJS);
+              web.console.warn(e.toString().toJS);
+            }
+          }
+        }
+      }
+
+      // Fallback: If event.track is video, attach it to our persistent media stream
+      if (videoTrack != null) {
+        try {
+          final stream = activeMediaStream ??= web.MediaStream();
+          stream.addTrack(videoTrack);
           onStreamAvailable(stream);
+        } catch (e) {
+          web.console.error('[Meowdoku] Failed to attach video track to MediaStream:'.toJS);
+          web.console.error(e.toString().toJS);
         }
       }
     });
