@@ -1,7 +1,12 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:vdoninja_sdk/vdoninja_sdk.dart';
-import 'package:web/web.dart' as web;
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'vdo_ninja_stub.dart'
+    if (dart.library.js_interop) 'vdo_ninja_web.dart';
+
+part 'vdo_ninja_service.freezed.dart';
+part 'vdo_ninja_service.g.dart';
 
 /// State representing the VDO.Ninja connection and video stream.
 enum VdoStreamStatus {
@@ -13,145 +18,110 @@ enum VdoStreamStatus {
   error,
 }
 
-/// Service managing the VDO.Ninja SDK lifecycle, room/stream subscriptions,
-/// and video track extraction on Flutter Web.
-class VdoNinjaService extends ChangeNotifier {
-  VDONinjaSDK? _sdk;
-  VdoStreamStatus _status = VdoStreamStatus.idle;
-  String? _errorMessage;
-  web.MediaStream? _currentStream;
-  String? _activeStreamId;
+/// Immutable state holding active stream details.
+@freezed
+abstract class VdoStreamState with _$VdoStreamState {
+  const VdoStreamState._();
 
-  StreamSubscription<void>? _connectedSub;
-  StreamSubscription<void>? _disconnectedSub;
-  StreamSubscription<VDONinjaErrorEvent>? _errorSub;
-  StreamSubscription<VDONinjaTrackEvent>? _trackSub;
+  const factory VdoStreamState({
+    @Default(VdoStreamStatus.idle) VdoStreamStatus status,
+    String? errorMessage,
+    dynamic currentStream,
+    String? activeStreamId,
+  }) = _VdoStreamState;
 
-  VdoStreamStatus get status => _status;
-  String? get errorMessage => _errorMessage;
-  web.MediaStream? get currentStream => _currentStream;
-  String? get activeStreamId => _activeStreamId;
-  bool get hasActiveStream => _currentStream != null;
+  bool get hasActiveStream => currentStream != null;
+}
+
+/// Generated Riverpod notifier for VDO.Ninja streaming integration.
+@Riverpod(keepAlive: true)
+class VdoNinjaStream extends _$VdoNinjaStream {
+  late final VdoNinjaPlatformAdapter _adapter;
+
+  @override
+  VdoStreamState build() {
+    _adapter = createVdoNinjaAdapter(
+      onStatusChanged: (status) => update((old) => old.copyWith(status: status)),
+      onError: (msg) => update((old) => old.copyWith(status: VdoStreamStatus.error, errorMessage: msg)),
+      onStreamAvailable: (stream) => update((old) => old.copyWith(status: VdoStreamStatus.viewing, currentStream: stream)),
+    );
+
+    ref.onDispose(() {
+      _adapter.dispose();
+    });
+
+    return const VdoStreamState();
+  }
+
+  /// Functional state update method taking current state and returning updated state:
+  /// `T update(T Function(T oldState) updater)`
+  VdoStreamState update(VdoStreamState Function(VdoStreamState oldState) updater) {
+    return state = updater(state);
+  }
 
   /// Initializes the VDO.Ninja JavaScript library.
   Future<void> initialize() async {
-    if (_status != VdoStreamStatus.idle) return;
-    _status = VdoStreamStatus.initializing;
-    notifyListeners();
+    if (state.status != VdoStreamStatus.idle) return;
+    update((oldState) => oldState.copyWith(status: VdoStreamStatus.initializing, errorMessage: null));
 
     try {
-      if (kIsWeb) {
-        await VDONinjaSDK.initialize();
-      }
-      _status = VdoStreamStatus.idle;
-      notifyListeners();
+      await _adapter.initialize();
+      update((oldState) => oldState.copyWith(status: VdoStreamStatus.idle));
     } catch (e) {
-      _status = VdoStreamStatus.error;
-      _errorMessage = 'Failed to initialize VDO.Ninja SDK: $e';
-      notifyListeners();
+      update(
+        (oldState) => oldState.copyWith(
+          status: VdoStreamStatus.error,
+          errorMessage: 'Failed to initialize VDO.Ninja SDK: $e',
+        ),
+      );
     }
   }
 
   /// Connects to VDO.Ninja and subscribes to [streamId].
   Future<void> viewStream(String streamId, {String? room, String? password}) async {
     if (!kIsWeb) {
-      _status = VdoStreamStatus.error;
-      _errorMessage = 'VDO.Ninja streaming is only supported on Web.';
-      notifyListeners();
+      update(
+        (oldState) => oldState.copyWith(
+          status: VdoStreamStatus.error,
+          errorMessage: 'VDO.Ninja streaming is only supported on Web.',
+        ),
+      );
       return;
     }
 
     await disconnect();
 
-    _status = VdoStreamStatus.connecting;
-    _activeStreamId = streamId;
-    _errorMessage = null;
-    notifyListeners();
+    update(
+      (oldState) => oldState.copyWith(
+        status: VdoStreamStatus.connecting,
+        activeStreamId: streamId,
+        errorMessage: null,
+      ),
+    );
 
     try {
-      final sdk = VDONinjaSDK(
-        debug: kDebugMode,
-        password: password != null ? .string(password) : null,
-      );
-      _sdk = sdk;
-
-      _connectedSub = sdk.onConnected.listen((_) {
-        _status = VdoStreamStatus.connected;
-        notifyListeners();
-      });
-
-      _disconnectedSub = sdk.onDisconnected.listen((_) {
-        _status = VdoStreamStatus.idle;
-        _currentStream = null;
-        notifyListeners();
-      });
-
-      _errorSub = sdk.onError.listen((event) {
-        _status = VdoStreamStatus.error;
-        _errorMessage = event.message;
-        notifyListeners();
-      });
-
-      _trackSub = sdk.onTrack.listen((event) {
-        if (event.streams.isNotEmpty) {
-          final stream = event.streams.first;
-          if (stream.isA<web.MediaStream>()) {
-            _currentStream = stream as web.MediaStream;
-            _status = VdoStreamStatus.viewing;
-            notifyListeners();
-          }
-        }
-      });
-
-      await sdk.connect();
-
-      if (room != null && room.isNotEmpty) {
-        await sdk.joinRoom(
-          room: room,
-          password: password != null ? .string(password) : null,
-        );
-      }
-
-      await sdk.view(streamId, audio: false, video: true);
-      _status = VdoStreamStatus.viewing;
-      notifyListeners();
+      await _adapter.viewStream(streamId, room: room, password: password);
     } catch (e) {
-      _status = VdoStreamStatus.error;
-      _errorMessage = 'Failed to view stream: $e';
-      notifyListeners();
+      update(
+        (oldState) => oldState.copyWith(
+          status: VdoStreamStatus.error,
+          errorMessage: 'Failed to view stream: $e',
+        ),
+      );
     }
   }
 
   /// Disconnects from VDO.Ninja and cleans up stream subscriptions.
   Future<void> disconnect() async {
-    await _connectedSub?.cancel();
-    await _disconnectedSub?.cancel();
-    await _errorSub?.cancel();
-    await _trackSub?.cancel();
+    await _adapter.disconnect();
 
-    _connectedSub = null;
-    _disconnectedSub = null;
-    _errorSub = null;
-    _trackSub = null;
-
-    if (_activeStreamId != null && _sdk != null) {
-      try {
-        _sdk!.stopViewing(_activeStreamId!);
-        _sdk!.disconnect();
-      } catch (_) {}
-    }
-
-    _sdk = null;
-    _currentStream = null;
-    _activeStreamId = null;
-    _status = VdoStreamStatus.idle;
-    _errorMessage = null;
-    notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    disconnect();
-    super.dispose();
+    update(
+      (oldState) => oldState.copyWith(
+        status: VdoStreamStatus.idle,
+        currentStream: null,
+        activeStreamId: null,
+        errorMessage: null,
+      ),
+    );
   }
 }

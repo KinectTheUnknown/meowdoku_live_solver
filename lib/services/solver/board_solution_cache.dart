@@ -7,14 +7,11 @@ import '../solver/meowdoku_solver.dart';
 ///
 /// Prevents redundant solving computations when scanning continuous video frames
 /// of the same board state or returning to recently seen board configurations.
-class BoardSolutionCache {
-  final int capacity;
+class BoardSolutionCache({final int capacity = 10}) {
   final LinkedHashMap<String, SolverResult> _cache = LinkedHashMap<String, SolverResult>();
 
   int _hits = 0;
   int _misses = 0;
-
-  BoardSolutionCache({this.capacity = 10});
 
   int get hits => _hits;
   int get misses => _misses;

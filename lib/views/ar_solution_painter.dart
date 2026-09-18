@@ -5,9 +5,16 @@ import '../services/vision/vision_models.dart';
 
 /// Style of icons rendered on top of winning solution cells.
 enum SolutionBadgeStyle {
-  catFace,
-  crown,
-  paw,
+  catFace(label: 'Cat', emoji: '🐱'),
+  crown(label: 'Crown', emoji: '👑'),
+  paw(label: 'Paw', emoji: '🐾');
+
+  final String label;
+  final String emoji;
+
+  const SolutionBadgeStyle({required this.label, required this.emoji});
+
+  String get displayName => '$emoji $label';
 }
 
 /// Custom painter that renders interactive calibration bounding box and glowing AR solution badges.
