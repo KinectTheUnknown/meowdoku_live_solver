@@ -2,13 +2,18 @@ import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as img;
 
 /// Container holding a captured video frame's raw pixel data and dimensions.
-class CapturedFrame({
-  required final Uint8List rgbaPixels,
-  required final int width,
-  required final int height,
-  DateTime? timestamp,
-}) {
-  final DateTime timestamp = timestamp ?? .now();
+class CapturedFrame {
+  final Uint8List rgbaPixels;
+  final int width;
+  final int height;
+  late final DateTime timestamp;
+
+  CapturedFrame({
+    required this.rgbaPixels,
+    required this.width,
+    required this.height,
+    DateTime? timestamp,
+  }) : timestamp = timestamp ?? DateTime.now();
 
   /// Total number of pixels in the frame.
   int get pixelCount => width * height;
