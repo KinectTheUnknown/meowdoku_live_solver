@@ -42,7 +42,9 @@ class WebVideoManagerImpl {
         video.srcObject = stream;
       }
       video.play().toDart.catchError((Object err) {
-        web.console.warn('[Meowdoku] video.play() was interrupted or rejected:'.toJS);
+        web.console.warn(
+          '[Meowdoku] video.play() was interrupted or rejected:'.toJS,
+        );
         web.console.warn(err.toString().toJS);
         return null;
       });

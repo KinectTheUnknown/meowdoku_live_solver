@@ -44,13 +44,16 @@ class VideoPlayerController extends _$VideoPlayerController {
       }
     });
 
-    final generatedViewType = 'vdo-ninja-player-${DateTime.now().microsecondsSinceEpoch}';
+    final generatedViewType =
+        'vdo-ninja-player-${DateTime.now().microsecondsSinceEpoch}';
     return VideoPlayerState(viewType: generatedViewType);
   }
 
   /// Functional state update method taking current state and returning updated state:
   /// `T update(T Function(T oldState) updater)`
-  VideoPlayerState update(VideoPlayerState Function(VideoPlayerState oldState) updater) {
+  VideoPlayerState update(
+    VideoPlayerState Function(VideoPlayerState oldState) updater,
+  ) {
     return state = updater(state);
   }
 
@@ -85,10 +88,7 @@ class VideoPlayerController extends _$VideoPlayerController {
 
   VideoPlayerState updateDimensions(int width, int height) {
     return update(
-      (oldState) => oldState.copyWith(
-        videoWidth: width,
-        videoHeight: height,
-      ),
+      (oldState) => oldState.copyWith(videoWidth: width, videoHeight: height),
     );
   }
 }

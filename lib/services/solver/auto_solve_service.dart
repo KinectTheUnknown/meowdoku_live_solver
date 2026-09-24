@@ -71,7 +71,9 @@ class AutoSolveService extends _$AutoSolveService {
 
   /// Captures single frame from the video element and processes puzzle vision + solver
   void triggerSnapAndSolve({bool forceReprocess = false}) {
-    final videoManager = ref.read(videoPlayerControllerProvider.notifier).videoManager;
+    final videoManager = ref
+        .read(videoPlayerControllerProvider.notifier)
+        .videoManager;
     final videoEl = videoManager.videoElement;
     final solverState = ref.read(solverControllerProvider);
     if (videoEl == null || solverState.isProcessing) return;
@@ -81,7 +83,9 @@ class AutoSolveService extends _$AutoSolveService {
 
     // Fast frame diffing: compute a 25-point grid sample hash to skip identical frames
     final currentHash = _computeSampleHash(frame);
-    if (!forceReprocess && _lastFrameSampleHash != null && _lastFrameSampleHash == currentHash) {
+    if (!forceReprocess &&
+        _lastFrameSampleHash != null &&
+        _lastFrameSampleHash == currentHash) {
       // Frame has not changed visually, skip heavy computer vision processing
       return;
     }
@@ -165,7 +169,9 @@ class AutoSolveService extends _$AutoSolveService {
       fixedQueens: solverState.fixedQueens,
     );
 
-    ref.read(solverControllerProvider.notifier).updateManualOverride(
+    ref
+        .read(solverControllerProvider.notifier)
+        .updateManualOverride(
           updatedBoard: updatedBoard,
           solverResult: solverResult,
           cacheHits: _solutionCache.hits,
@@ -178,7 +184,9 @@ class AutoSolveService extends _$AutoSolveService {
   void handleClearSolution() {
     _solutionCache.clear();
     _lastFrameSampleHash = null;
-    ref.read(solverControllerProvider.notifier).clearSolution(
+    ref
+        .read(solverControllerProvider.notifier)
+        .clearSolution(
           cacheHits: _solutionCache.hits,
           cacheMisses: _solutionCache.misses,
           cacheSize: _solutionCache.size,

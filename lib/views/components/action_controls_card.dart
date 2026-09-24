@@ -69,7 +69,8 @@ class ActionControlsCard extends ConsumerWidget {
                       value: solverState.autoSolveEnabled,
                       activeThumbColor: const Color(0xFF38BDF8),
                       onChanged: videoState.hasStream
-                          ? (enabled) => autoSolveService.toggleAutoSolve(enabled)
+                          ? (enabled) =>
+                                autoSolveService.toggleAutoSolve(enabled)
                           : null,
                     ),
                   ],
@@ -81,10 +82,7 @@ class ActionControlsCard extends ConsumerWidget {
                     children: [
                       const Text(
                         'Interval:',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white70,
-                        ),
+                        style: TextStyle(fontSize: 12, color: Colors.white70),
                       ),
                       Text(
                         '${solverState.autoSolveIntervalSec.toStringAsFixed(1)}s',

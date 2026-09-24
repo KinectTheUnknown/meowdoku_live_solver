@@ -27,8 +27,6 @@ class VideoPlayerView extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return HtmlElementView(
-      viewType: videoState.viewType,
-    );
+    return HtmlElementView(viewType: videoState.viewType);
   }
 }

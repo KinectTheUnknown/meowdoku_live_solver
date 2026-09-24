@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:meowdoku_live_solver/main.dart';
 
 void main() {
-  testWidgets('App launches with title and video controls', (WidgetTester tester) async {
+  testWidgets('App launches with title and video controls', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(const ProviderScope(child: MeowdokuApp()));
     await tester.pump();
 

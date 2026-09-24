@@ -1,8 +1,10 @@
 import 'board_coordinate.dart';
 
 /// Represents a Meowdoku / Queens puzzle board definition.
-class PuzzleBoard(final int n, final List<List<int>> regions) {
-  this {
+class PuzzleBoard {
+  final int n;
+  final List<List<int>> regions;
+  PuzzleBoard(this.n, this.regions) {
     assert(n > 0, 'Grid dimension n must be positive');
     assert(regions.length == n, 'Region matrix rows must equal $n');
     for (final row in regions) {
@@ -29,18 +31,26 @@ class PuzzleBoard(final int n, final List<List<int>> regions) {
 }
 
 /// Thrown when a [PuzzleBoard] violates the game structure constraints.
-class InvalidBoardException(final String message) implements Exception {
+class InvalidBoardException implements Exception {
+  final String message;
+  InvalidBoardException(this.message);
   @override
   String toString() => 'InvalidBoardException: $message';
 }
 
 /// The result returned by the MeowdokuSolver.
-class const SolverResult({
-  required final bool isSolved,
-  required final List<BoardCoordinate> queens,
-  required final Duration duration,
-  required final int statesExplored,
-}) {
+class SolverResult {
+  final bool isSolved;
+  final List<BoardCoordinate> queens;
+  final Duration duration;
+  final int statesExplored;
+  const SolverResult({
+    required this.isSolved,
+    required this.queens,
+    required this.duration,
+    required this.statesExplored,
+  });
+
   /// Factory for an unsolvable board result.
   factory unsolvable({
     required Duration duration,

@@ -7,14 +7,21 @@ import 'color_clusterer.dart';
 import 'vision_models.dart';
 
 /// Complete result of running the vision extraction pipeline on an image frame.
-class VisionExtractionResult({
-  required final BoardRect boardRect,
-  required final int n,
-  required final PuzzleBoard puzzleBoard,
-  required final List<List<CellVisionResult>> cellGrid,
-  required final List<RgbColor> clusterColors,
-  required final List<BoardCoordinate> detectedFixedQueens,
-}) {
+class VisionExtractionResult {
+  final BoardRect boardRect;
+  final int n;
+  final PuzzleBoard puzzleBoard;
+  final List<List<CellVisionResult>> cellGrid;
+  final List<RgbColor> clusterColors;
+  final List<BoardCoordinate> detectedFixedQueens;
+  VisionExtractionResult({
+    required this.boardRect,
+    required this.n,
+    required this.puzzleBoard,
+    required this.cellGrid,
+    required this.clusterColors,
+    required this.detectedFixedQueens,
+  });
   @override
   String toString() =>
       'VisionExtractionResult(n: $n, board: $boardRect, colors: ${clusterColors.length}, fixedQueens: ${detectedFixedQueens.length})';
@@ -71,7 +78,10 @@ class VisionPipeline {
     }
 
     // 5. Cluster into N color regions
-    final clustering = ColorClusterer.clusterCells(cells: flatCells, n: resolvedN);
+    final clustering = ColorClusterer.clusterCells(
+      cells: flatCells,
+      n: resolvedN,
+    );
 
     // 6. Construct PuzzleBoard
     final puzzleBoard = PuzzleBoard(resolvedN, clustering.regions);

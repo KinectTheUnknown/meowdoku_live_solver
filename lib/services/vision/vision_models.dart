@@ -1,7 +1,11 @@
 import 'color_space.dart';
 
 /// Represents an RGB color with helper accessors.
-class const RgbColor(final int r, final int g, final int b) {
+class RgbColor {
+  final int r;
+  final int g;
+  final int b;
+  const RgbColor(this.r, this.g, this.b);
   LabColor toLab() => LabColor.fromRgb(r, g, b);
 
   @override
@@ -21,22 +25,24 @@ class const RgbColor(final int r, final int g, final int b) {
 }
 
 /// Type of marker detected in a cell.
-enum CellMarkerType {
-  none,
-  whiteX,
-  redX,
-  cat,
-}
+enum CellMarkerType { none, whiteX, redX, cat }
 
 /// Represents the analyzed result of a single puzzle cell.
-class CellVisionResult({
-  required final int row,
-  required final int col,
-  required final RgbColor dominantColor,
-  required final LabColor labColor,
-  required final CellMarkerType markerType,
-}) {
-  bool get isFixedQueen => markerType == CellMarkerType.cat || markerType == CellMarkerType.redX;
+class CellVisionResult {
+  final int row;
+  final int col;
+  final RgbColor dominantColor;
+  final LabColor labColor;
+  final CellMarkerType markerType;
+  CellVisionResult({
+    required this.row,
+    required this.col,
+    required this.dominantColor,
+    required this.labColor,
+    required this.markerType,
+  });
+  bool get isFixedQueen =>
+      markerType == CellMarkerType.cat || markerType == CellMarkerType.redX;
 
   @override
   String toString() =>
@@ -44,12 +50,12 @@ class CellVisionResult({
 }
 
 /// Bounding rectangle in pixel coordinates for the board ROI.
-class BoardRect(
-  final int left,
-  final int top,
-  final int width,
-  final int height,
-) {
+class BoardRect {
+  final int left;
+  final int top;
+  final int width;
+  final int height;
+  BoardRect(this.left, this.top, this.width, this.height);
   int get right => left + width;
   int get bottom => top + height;
 

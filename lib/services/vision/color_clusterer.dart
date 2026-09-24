@@ -8,7 +8,8 @@ class ColorClusterer {
   ///
   /// Returns an N x N matrix of region indices [0 .. k-1], and the representative
   /// average RGB colors for each cluster index.
-  static ({List<List<int>> regions, List<RgbColor> clusterColors}) clusterCells({
+  static ({List<List<int>> regions, List<RgbColor> clusterColors})
+  clusterCells({
     required List<CellVisionResult> cells,
     required int n,
     int maxIterations = 30,
@@ -116,11 +117,13 @@ class ColorClusterer {
         }
       }
       if (count > 0) {
-        clusterColors.add(RgbColor(
-          (sumR / count).round(),
-          (sumG / count).round(),
-          (sumB / count).round(),
-        ));
+        clusterColors.add(
+          RgbColor(
+            (sumR / count).round(),
+            (sumG / count).round(),
+            (sumB / count).round(),
+          ),
+        );
       } else {
         clusterColors.add(const RgbColor(128, 128, 128));
       }

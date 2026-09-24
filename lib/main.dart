@@ -94,10 +94,7 @@ class _LiveStreamScreenState extends ConsumerState<LiveStreamScreen> {
       body: Row(
         children: [
           // Left: Main Live Video Viewport with AR Overlay
-          const Expanded(
-            flex: 3,
-            child: ArStreamViewport(),
-          ),
+          const Expanded(flex: 3, child: ArStreamViewport()),
 
           // Right: Companion Inspector & Controls Sidebar
           Container(
@@ -121,7 +118,8 @@ class _LiveStreamScreenState extends ConsumerState<LiveStreamScreen> {
                   clusterColors: solverState.visionResult?.clusterColors,
                   solutionQueens: solverState.solutionQueens,
                   fixedQueens: solverState.fixedQueens,
-                  onCellRegionChanged: autoSolveService.handleManualCellColorOverride,
+                  onCellRegionChanged:
+                      autoSolveService.handleManualCellColorOverride,
                 ),
                 const SizedBox(height: 14),
 

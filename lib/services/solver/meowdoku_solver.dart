@@ -5,7 +5,10 @@ import '../../models/puzzle_board.dart';
 
 /// High-performance Bitmask Constraint Satisfaction Problem (CSP) Solver for
 /// Meowdoku and Queens logic puzzles.
-class MeowdokuSolver(final PuzzleBoard board) {
+class MeowdokuSolver {
+  final PuzzleBoard board;
+  MeowdokuSolver(this.board);
+
   /// Solves the puzzle and returns the first valid queen placement.
   ///
   /// If [initialFixedQueens] is provided, those queen coordinates are locked in place
