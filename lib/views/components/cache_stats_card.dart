@@ -23,10 +23,7 @@ class CacheStatsCard extends ConsumerWidget {
             children: [
               const Text(
                 'Cache Size',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.white54,
-                ),
+                style: TextStyle(fontSize: 11, color: Colors.white54),
               ),
               const SizedBox(height: 2),
               Text(
@@ -42,10 +39,7 @@ class CacheStatsCard extends ConsumerWidget {
             children: [
               const Text(
                 'Hits',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.white54,
-                ),
+                style: TextStyle(fontSize: 11, color: Colors.white54),
               ),
               const SizedBox(height: 2),
               Text(
@@ -62,10 +56,7 @@ class CacheStatsCard extends ConsumerWidget {
             children: [
               const Text(
                 'Misses',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.white54,
-                ),
+                style: TextStyle(fontSize: 11, color: Colors.white54),
               ),
               const SizedBox(height: 2),
               Text(

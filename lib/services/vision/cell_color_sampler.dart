@@ -104,10 +104,18 @@ class CellColorSampler {
     int darkPixels = 0;
     int corePixels = 0;
 
-    for (int y = (centerY - coreRadius).round(); y <= (centerY + coreRadius).round(); y += 2) {
+    for (
+      int y = (centerY - coreRadius).round();
+      y <= (centerY + coreRadius).round();
+      y += 2
+    ) {
       if (y < 0 || y >= image.height) continue;
       final dy = y - centerY;
-      for (int x = (centerX - coreRadius).round(); x <= (centerX + coreRadius).round(); x += 2) {
+      for (
+        int x = (centerX - coreRadius).round();
+        x <= (centerX + coreRadius).round();
+        x += 2
+      ) {
         if (x < 0 || x >= image.width) continue;
         final dx = x - centerX;
         if (math.sqrt(dx * dx + dy * dy) <= coreRadius) {

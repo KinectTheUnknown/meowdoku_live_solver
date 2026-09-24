@@ -7,7 +7,8 @@ class StreamConnectionCard extends ConsumerStatefulWidget {
   const StreamConnectionCard({super.key});
 
   @override
-  ConsumerState<StreamConnectionCard> createState() => _StreamConnectionCardState();
+  ConsumerState<StreamConnectionCard> createState() =>
+      _StreamConnectionCardState();
 }
 
 class _StreamConnectionCardState extends ConsumerState<StreamConnectionCard> {
@@ -27,14 +28,17 @@ class _StreamConnectionCardState extends ConsumerState<StreamConnectionCard> {
     final passwordText = _passwordController.text.trim();
     final password = passwordText.isNotEmpty ? passwordText : null;
     if (streamId.isNotEmpty) {
-      ref.read(vdoNinjaStreamProvider.notifier).viewStream(streamId, password: password);
+      ref
+          .read(vdoNinjaStreamProvider.notifier)
+          .viewStream(streamId, password: password);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final vdoState = ref.watch(vdoNinjaStreamProvider);
-    final isConnecting = vdoState.status == VdoStreamStatus.connecting ||
+    final isConnecting =
+        vdoState.status == VdoStreamStatus.connecting ||
         vdoState.status == VdoStreamStatus.initializing;
     final isViewing = vdoState.status == VdoStreamStatus.viewing;
 
@@ -75,10 +79,12 @@ class _StreamConnectionCardState extends ConsumerState<StreamConnectionCard> {
               onPressed: isConnecting
                   ? null
                   : isViewing
-                      ? ref.read(vdoNinjaStreamProvider.notifier).disconnect
-                      : _handleConnect,
+                  ? ref.read(vdoNinjaStreamProvider.notifier).disconnect
+                  : _handleConnect,
               style: ElevatedButton.styleFrom(
-                backgroundColor: isViewing ? Colors.redAccent : const Color(0xFF38BDF8),
+                backgroundColor: isViewing
+                    ? Colors.redAccent
+                    : const Color(0xFF38BDF8),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 14,
@@ -143,7 +149,8 @@ class _StreamConnectionCardState extends ConsumerState<StreamConnectionCard> {
         ),
 
         // Error message banner
-        if (vdoState.errorMessage != null && vdoState.errorMessage!.isNotEmpty) ...[
+        if (vdoState.errorMessage != null &&
+            vdoState.errorMessage!.isNotEmpty) ...[
           const SizedBox(height: 8),
           Container(
             width: double.infinity,
@@ -151,12 +158,18 @@ class _StreamConnectionCardState extends ConsumerState<StreamConnectionCard> {
             decoration: BoxDecoration(
               color: const Color(0xFF7F1D1D).withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(6),
-              border: Border.all(color: Colors.redAccent.withValues(alpha: 0.8)),
+              border: Border.all(
+                color: Colors.redAccent.withValues(alpha: 0.8),
+              ),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.error_outline, size: 14, color: Colors.redAccent),
+                const Icon(
+                  Icons.error_outline,
+                  size: 14,
+                  color: Colors.redAccent,
+                ),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(

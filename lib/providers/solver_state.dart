@@ -98,11 +98,15 @@ class SolverController extends _$SolverController {
   }
 
   SolverState setAutoSolveIntervalSec(double interval) {
-    return update((oldState) => oldState.copyWith(autoSolveIntervalSec: interval));
+    return update(
+      (oldState) => oldState.copyWith(autoSolveIntervalSec: interval),
+    );
   }
 
   SolverState setIgnoreExistingQueens(bool ignore) {
-    return update((oldState) => oldState.copyWith(ignoreExistingQueens: ignore));
+    return update(
+      (oldState) => oldState.copyWith(ignoreExistingQueens: ignore),
+    );
   }
 
   SolverState setShowCalibration(bool show) {

@@ -48,7 +48,11 @@ class VdoNinjaWebAdapter implements VdoNinjaPlatformAdapter {
   }
 
   @override
-  Future<void> viewStream(String streamId, {String? room, String? password}) async {
+  Future<void> viewStream(
+    String streamId, {
+    String? room,
+    String? password,
+  }) async {
     await disconnect();
     _activeStreamId = streamId;
 
@@ -98,7 +102,9 @@ class VdoNinjaWebAdapter implements VdoNinjaPlatformAdapter {
                 return;
               }
             } catch (e) {
-              web.console.warn('[Meowdoku] Error checking stream video tracks:'.toJS);
+              web.console.warn(
+                '[Meowdoku] Error checking stream video tracks:'.toJS,
+              );
               web.console.warn(e.toString().toJS);
             }
           }
@@ -112,7 +118,9 @@ class VdoNinjaWebAdapter implements VdoNinjaPlatformAdapter {
           stream.addTrack(videoTrack);
           onStreamAvailable(stream);
         } catch (e) {
-          web.console.error('[Meowdoku] Failed to attach video track to MediaStream:'.toJS);
+          web.console.error(
+            '[Meowdoku] Failed to attach video track to MediaStream:'.toJS,
+          );
           web.console.error(e.toString().toJS);
         }
       }

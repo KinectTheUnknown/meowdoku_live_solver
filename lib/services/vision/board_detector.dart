@@ -30,7 +30,12 @@ class BoardDetector {
 
   /// Automatically detects the grid dimension [N] (e.g. 7, 8, 9, 10, 11, 12) by analyzing
   /// periodic white inter-cell grid borders across the board area.
-  static int detectGridDimension(img.Image image, BoardRect boardRoi, {int minN = 6, int maxN = 14}) {
+  static int detectGridDimension(
+    img.Image image,
+    BoardRect boardRoi, {
+    int minN = 6,
+    int maxN = 14,
+  }) {
     final whiteCountByX = List<int>.filled(boardRoi.width, 0);
     final whiteCountByY = List<int>.filled(boardRoi.height, 0);
     final step = 8;

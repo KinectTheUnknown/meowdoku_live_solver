@@ -65,11 +65,18 @@ class BoardInspectorView extends StatelessWidget {
             children: [
               Text(
                 'Digital Matrix (${n}x$n)',
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  color: Colors.white,
+                ),
               ),
               Text(
                 'Tap cell to cycle region',
-                style: TextStyle(fontSize: 11, color: Colors.white.withValues(alpha: 0.5)),
+                style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.white.withValues(alpha: 0.5),
+                ),
               ),
             ],
           ),
@@ -95,8 +102,12 @@ class BoardInspectorView extends StatelessWidget {
                   cellColor = Color.fromARGB(255, rgb.r, rgb.g, rgb.b);
                 }
 
-                final isQueen = solutionQueens.any((q) => q.row == r && q.col == c);
-                final isFixed = fixedQueens.any((q) => q.row == r && q.col == c);
+                final isQueen = solutionQueens.any(
+                  (q) => q.row == r && q.col == c,
+                );
+                final isFixed = fixedQueens.any(
+                  (q) => q.row == r && q.col == c,
+                );
 
                 return InkWell(
                   onTap: () {
@@ -111,7 +122,9 @@ class BoardInspectorView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                       border: isQueen
                           ? Border.all(
-                              color: isFixed ? Colors.greenAccent : Colors.purpleAccent,
+                              color: isFixed
+                                  ? Colors.greenAccent
+                                  : Colors.purpleAccent,
                               width: 2,
                             )
                           : null,

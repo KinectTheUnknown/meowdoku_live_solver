@@ -25,41 +25,62 @@ void main() {
       final solverResult = MeowdokuSolver(visionResult.puzzleBoard).solve();
       expect(solverResult.isSolved, isTrue);
       expect(solverResult.queens.length, equals(9));
-      expect(MeowdokuSolver.verifySolution(visionResult.puzzleBoard, solverResult.queens), isTrue);
-    });
-
-    test('IMG_4552.PNG (10x10 mid-game with pre-placed Cats & Xs) extracts colors without marker corruption', () {
-      final file = File('test/fixtures/screenshots/IMG_4552.PNG');
-      expect(file.existsSync(), isTrue);
-
-      final bytes = file.readAsBytesSync();
-      final image = img.decodeImage(bytes);
-      expect(image, isNotNull);
-
-      // IMG_4552 is a 10x10 board (Level 750, 3/10) with Cats & Red X
-      final visionResult = VisionPipeline.processImage(image!, n: 10);
-
-      expect(visionResult.n, equals(10));
-      expect(visionResult.clusterColors.length, equals(10));
-      expect(visionResult.puzzleBoard.isValid(), isTrue);
-
-      // Verify Cats and Red X were detected as fixed queens
-      expect(visionResult.detectedFixedQueens.isNotEmpty, isTrue);
-
-      // Verify solver can solve this board locking the detected fixed queens in place
-      final solverResult = MeowdokuSolver(visionResult.puzzleBoard).solve(
-        initialFixedQueens: visionResult.detectedFixedQueens,
+      expect(
+        MeowdokuSolver.verifySolution(
+          visionResult.puzzleBoard,
+          solverResult.queens,
+        ),
+        isTrue,
       );
-      expect(solverResult.isSolved, isTrue);
-      expect(solverResult.queens.length, equals(10));
-      expect(MeowdokuSolver.verifySolution(visionResult.puzzleBoard, solverResult.queens), isTrue);
-
-      // Also verify solver can solve with ignoreExistingQueens: true
-      final visionIgnored = VisionPipeline.processImage(image, n: 10, ignoreExistingQueens: true);
-      expect(visionIgnored.detectedFixedQueens.isEmpty, isTrue);
-      final solverIgnoredResult = MeowdokuSolver(visionIgnored.puzzleBoard).solve();
-      expect(solverIgnoredResult.isSolved, isTrue);
     });
+
+    test(
+      'IMG_4552.PNG (10x10 mid-game with pre-placed Cats & Xs) extracts colors without marker corruption',
+      () {
+        final file = File('test/fixtures/screenshots/IMG_4552.PNG');
+        expect(file.existsSync(), isTrue);
+
+        final bytes = file.readAsBytesSync();
+        final image = img.decodeImage(bytes);
+        expect(image, isNotNull);
+
+        // IMG_4552 is a 10x10 board (Level 750, 3/10) with Cats & Red X
+        final visionResult = VisionPipeline.processImage(image!, n: 10);
+
+        expect(visionResult.n, equals(10));
+        expect(visionResult.clusterColors.length, equals(10));
+        expect(visionResult.puzzleBoard.isValid(), isTrue);
+
+        // Verify Cats and Red X were detected as fixed queens
+        expect(visionResult.detectedFixedQueens.isNotEmpty, isTrue);
+
+        // Verify solver can solve this board locking the detected fixed queens in place
+        final solverResult = MeowdokuSolver(
+          visionResult.puzzleBoard,
+        ).solve(initialFixedQueens: visionResult.detectedFixedQueens);
+        expect(solverResult.isSolved, isTrue);
+        expect(solverResult.queens.length, equals(10));
+        expect(
+          MeowdokuSolver.verifySolution(
+            visionResult.puzzleBoard,
+            solverResult.queens,
+          ),
+          isTrue,
+        );
+
+        // Also verify solver can solve with ignoreExistingQueens: true
+        final visionIgnored = VisionPipeline.processImage(
+          image,
+          n: 10,
+          ignoreExistingQueens: true,
+        );
+        expect(visionIgnored.detectedFixedQueens.isEmpty, isTrue);
+        final solverIgnoredResult = MeowdokuSolver(
+          visionIgnored.puzzleBoard,
+        ).solve();
+        expect(solverIgnoredResult.isSolved, isTrue);
+      },
+    );
 
     test('IMG_4557.PNG extracts and solves', () {
       final file = File('test/fixtures/screenshots/IMG_4557.PNG');
@@ -76,7 +97,13 @@ void main() {
       final solverResult = MeowdokuSolver(visionResult.puzzleBoard).solve();
       expect(solverResult.isSolved, isTrue);
       expect(solverResult.queens.length, equals(12));
-      expect(MeowdokuSolver.verifySolution(visionResult.puzzleBoard, solverResult.queens), isTrue);
+      expect(
+        MeowdokuSolver.verifySolution(
+          visionResult.puzzleBoard,
+          solverResult.queens,
+        ),
+        isTrue,
+      );
     });
 
     test('IMG_4558.PNG extracts and solves', () {
@@ -93,7 +120,13 @@ void main() {
       final solverResult = MeowdokuSolver(visionResult.puzzleBoard).solve();
       expect(solverResult.isSolved, isTrue);
       expect(solverResult.queens.length, equals(10));
-      expect(MeowdokuSolver.verifySolution(visionResult.puzzleBoard, solverResult.queens), isTrue);
+      expect(
+        MeowdokuSolver.verifySolution(
+          visionResult.puzzleBoard,
+          solverResult.queens,
+        ),
+        isTrue,
+      );
     });
 
     test('IMG_4559.PNG extracts and solves', () {
@@ -110,27 +143,42 @@ void main() {
       final solverResult = MeowdokuSolver(visionResult.puzzleBoard).solve();
       expect(solverResult.isSolved, isTrue);
       expect(solverResult.queens.length, equals(10));
-      expect(MeowdokuSolver.verifySolution(visionResult.puzzleBoard, solverResult.queens), isTrue);
+      expect(
+        MeowdokuSolver.verifySolution(
+          visionResult.puzzleBoard,
+          solverResult.queens,
+        ),
+        isTrue,
+      );
     });
 
-    test('IMG_4560.PNG (10x10 mid-game board) extracts and solves correctly', () {
-      final file = File('test/fixtures/screenshots/IMG_4560.PNG');
-      expect(file.existsSync(), isTrue);
+    test(
+      'IMG_4560.PNG (10x10 mid-game board) extracts and solves correctly',
+      () {
+        final file = File('test/fixtures/screenshots/IMG_4560.PNG');
+        expect(file.existsSync(), isTrue);
 
-      final bytes = file.readAsBytesSync();
-      final image = img.decodeImage(bytes);
-      expect(image, isNotNull);
+        final bytes = file.readAsBytesSync();
+        final image = img.decodeImage(bytes);
+        expect(image, isNotNull);
 
-      final visionResult = VisionPipeline.processImage(image!, n: 10);
+        final visionResult = VisionPipeline.processImage(image!, n: 10);
 
-      expect(visionResult.n, equals(10));
-      expect(visionResult.clusterColors.length, equals(10));
-      expect(visionResult.puzzleBoard.isValid(), isTrue);
+        expect(visionResult.n, equals(10));
+        expect(visionResult.clusterColors.length, equals(10));
+        expect(visionResult.puzzleBoard.isValid(), isTrue);
 
-      final solverResult = MeowdokuSolver(visionResult.puzzleBoard).solve();
-      expect(solverResult.isSolved, isTrue);
-      expect(solverResult.queens.length, equals(10));
-      expect(MeowdokuSolver.verifySolution(visionResult.puzzleBoard, solverResult.queens), isTrue);
-    });
+        final solverResult = MeowdokuSolver(visionResult.puzzleBoard).solve();
+        expect(solverResult.isSolved, isTrue);
+        expect(solverResult.queens.length, equals(10));
+        expect(
+          MeowdokuSolver.verifySolution(
+            visionResult.puzzleBoard,
+            solverResult.queens,
+          ),
+          isTrue,
+        );
+      },
+    );
   });
 }

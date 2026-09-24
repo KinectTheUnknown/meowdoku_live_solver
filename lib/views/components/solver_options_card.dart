@@ -25,10 +25,7 @@ class SolverOptionsCard extends ConsumerWidget {
           children: [
             const Text(
               'Solver & Vision Options',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             CheckboxListTile(
@@ -46,7 +43,9 @@ class SolverOptionsCard extends ConsumerWidget {
               onChanged: (val) {
                 solverNotifier.setIgnoreExistingQueens(val ?? false);
                 if (solverState.visionResult != null) {
-                  ref.read(autoSolveServiceProvider.notifier).triggerSnapAndSolve(forceReprocess: true);
+                  ref
+                      .read(autoSolveServiceProvider.notifier)
+                      .triggerSnapAndSolve(forceReprocess: true);
                 }
               },
             ),
@@ -58,7 +57,8 @@ class SolverOptionsCard extends ConsumerWidget {
               value: solverState.showCalibration,
               dense: true,
               contentPadding: EdgeInsets.zero,
-              onChanged: (val) => solverNotifier.setShowCalibration(val ?? true),
+              onChanged: (val) =>
+                  solverNotifier.setShowCalibration(val ?? true),
             ),
             const SizedBox(height: 6),
             Row(
@@ -66,10 +66,7 @@ class SolverOptionsCard extends ConsumerWidget {
               children: [
                 const Text(
                   'Overlay Icon:',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white70,
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.white70),
                 ),
                 DropdownButton<SolutionBadgeStyle>(
                   value: solverState.badgeStyle,

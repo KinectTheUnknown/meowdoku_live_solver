@@ -20,7 +20,11 @@ class VdoNinjaStubAdapter implements VdoNinjaPlatformAdapter {
   Future<void> initialize() async {}
 
   @override
-  Future<void> viewStream(String streamId, {String? room, String? password}) async {}
+  Future<void> viewStream(
+    String streamId, {
+    String? room,
+    String? password,
+  }) async {}
 
   @override
   Future<void> disconnect() async {}

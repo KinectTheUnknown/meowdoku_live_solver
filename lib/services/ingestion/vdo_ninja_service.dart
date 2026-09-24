@@ -2,8 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'vdo_ninja_stub.dart'
-    if (dart.library.js_interop) 'vdo_ninja_web.dart';
+import 'vdo_ninja_stub.dart' if (dart.library.js_interop) 'vdo_ninja_web.dart';
 
 part 'vdo_ninja_service.freezed.dart';
 part 'vdo_ninja_service.g.dart';
@@ -41,9 +40,17 @@ class VdoNinjaStream extends _$VdoNinjaStream {
   @override
   VdoStreamState build() {
     _adapter = createVdoNinjaAdapter(
-      onStatusChanged: (status) => update((old) => old.copyWith(status: status)),
-      onError: (msg) => update((old) => old.copyWith(status: VdoStreamStatus.error, errorMessage: msg)),
-      onStreamAvailable: (stream) => update((old) => old.copyWith(status: VdoStreamStatus.viewing, currentStream: stream)),
+      onStatusChanged: (status) =>
+          update((old) => old.copyWith(status: status)),
+      onError: (msg) => update(
+        (old) => old.copyWith(status: VdoStreamStatus.error, errorMessage: msg),
+      ),
+      onStreamAvailable: (stream) => update(
+        (old) => old.copyWith(
+          status: VdoStreamStatus.viewing,
+          currentStream: stream,
+        ),
+      ),
     );
 
     ref.onDispose(() {
@@ -55,14 +62,21 @@ class VdoNinjaStream extends _$VdoNinjaStream {
 
   /// Functional state update method taking current state and returning updated state:
   /// `T update(T Function(T oldState) updater)`
-  VdoStreamState update(VdoStreamState Function(VdoStreamState oldState) updater) {
+  VdoStreamState update(
+    VdoStreamState Function(VdoStreamState oldState) updater,
+  ) {
     return state = updater(state);
   }
 
   /// Initializes the VDO.Ninja JavaScript library.
   Future<void> initialize() async {
     if (state.status != VdoStreamStatus.idle) return;
-    update((oldState) => oldState.copyWith(status: VdoStreamStatus.initializing, errorMessage: null));
+    update(
+      (oldState) => oldState.copyWith(
+        status: VdoStreamStatus.initializing,
+        errorMessage: null,
+      ),
+    );
 
     try {
       await _adapter.initialize();
@@ -78,7 +92,11 @@ class VdoNinjaStream extends _$VdoNinjaStream {
   }
 
   /// Connects to VDO.Ninja and subscribes to [streamId].
-  Future<void> viewStream(String streamId, {String? room, String? password}) async {
+  Future<void> viewStream(
+    String streamId, {
+    String? room,
+    String? password,
+  }) async {
     if (!kIsWeb) {
       update(
         (oldState) => oldState.copyWith(

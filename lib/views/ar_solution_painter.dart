@@ -41,7 +41,8 @@ class ArSolutionPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (videoWidth <= 0 || videoHeight <= 0 || boardRect == null || n <= 0) return;
+    if (videoWidth <= 0 || videoHeight <= 0 || boardRect == null || n <= 0)
+      return;
 
     // Calculate scale factor from natural video coordinates to screen size (BoxFit.contain)
     final scaleX = size.width / videoWidth;
@@ -64,7 +65,10 @@ class ArSolutionPainter extends CustomPainter {
         ..color = const Color(0xFF38BDF8).withValues(alpha: 0.6)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.0;
-      canvas.drawRRect(RRect.fromRectAndRadius(rect, const Radius.circular(8)), borderPaint);
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(rect, const Radius.circular(8)),
+        borderPaint,
+      );
 
       // Corner handles
       final cornerPaint = Paint()
@@ -87,19 +91,21 @@ class ArSolutionPainter extends CustomPainter {
       SolutionBadgeStyle.paw => '🐾',
     };
 
-    final textPainter = TextPainter(
-      textDirection: TextDirection.ltr,
-    );
+    final textPainter = TextPainter(textDirection: TextDirection.ltr);
 
     for (final q in solutionQueens) {
       final cx = rect.left + (q.col + 0.5) * cellW;
       final cy = rect.top + (q.row + 0.5) * cellH;
       final radius = math.min(cellW, cellH) * 0.42;
 
-      final isPrePlaced = fixedQueens.any((f) => f.row == q.row && f.col == q.col);
+      final isPrePlaced = fixedQueens.any(
+        (f) => f.row == q.row && f.col == q.col,
+      );
 
       // Glowing aura
-      final auraColor = isPrePlaced ? const Color(0xFF10B981) : const Color(0xFFA855F7);
+      final auraColor = isPrePlaced
+          ? const Color(0xFF10B981)
+          : const Color(0xFFA855F7);
 
       final glowPaint = Paint()
         ..color = auraColor.withValues(alpha: 0.35)
@@ -116,7 +122,9 @@ class ArSolutionPainter extends CustomPainter {
 
       // Disc border
       final ringPaint = Paint()
-        ..color = isPrePlaced ? const Color(0xFF34D399) : const Color(0xFFE879F9)
+        ..color = isPrePlaced
+            ? const Color(0xFF34D399)
+            : const Color(0xFFE879F9)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.5;
       canvas.drawCircle(Offset(cx, cy), radius, ringPaint);
@@ -124,9 +132,7 @@ class ArSolutionPainter extends CustomPainter {
       // Icon symbol
       textPainter.text = TextSpan(
         text: queenIcon,
-        style: TextStyle(
-          fontSize: radius * 1.1,
-        ),
+        style: TextStyle(fontSize: radius * 1.1),
       );
       textPainter.layout();
       textPainter.paint(

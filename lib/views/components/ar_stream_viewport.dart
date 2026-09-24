@@ -30,7 +30,10 @@ class ArStreamViewport extends ConsumerWidget {
           CustomPaint(
             painter: ArSolutionPainter(
               boardRect: solverState.visionResult?.boardRect,
-              n: solverState.currentBoard?.n ?? solverState.visionResult?.n ?? 0,
+              n:
+                  solverState.currentBoard?.n ??
+                  solverState.visionResult?.n ??
+                  0,
               solutionQueens: solverState.solutionQueens,
               fixedQueens: solverState.fixedQueens,
               videoWidth: videoW,
@@ -103,10 +106,7 @@ class ArStreamViewport extends ConsumerWidget {
                     vdoState.status == VdoStreamStatus.connecting
                         ? 'Connecting to VDO.Ninja stream...'
                         : 'Enter a VDO.Ninja Stream ID to start solving live',
-                    style: const TextStyle(
-                      color: Colors.white54,
-                      fontSize: 15,
-                    ),
+                    style: const TextStyle(color: Colors.white54, fontSize: 15),
                   ),
                 ],
               ),
